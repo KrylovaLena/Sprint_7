@@ -3,7 +3,8 @@ import requests
 import allure
 from data import Urls as url
 from data import Endpoints as ep
-from register import generate_random_string
+from data import CourierErrors
+
 
 class TestCourierLogin:
     @allure.title("Тест на успешный логин курьера")
@@ -16,7 +17,7 @@ class TestCourierLogin:
         with allure.step("Шаг 2: Проверка кода ответа"):
             assert response.status_code == 200
         with allure.step("Шаг 3: Проверка сообщения при успешном ответе - 'id' курьера в тексте"):
-            assert "id" in response.text
+            assert "id" in response.text, "Ошибка: Отсутствует 'id' курьера в тексте"
 
 
     @allure.title('Тест на ошибки при авторизации без передачи поля логина')
@@ -34,7 +35,7 @@ class TestCourierLogin:
         with allure.step("Шаг 2: Проверка кода ответа"):
             assert response.status_code == 400
         with allure.step("Шаг 3: Проверка сообщения текст ответа соответствует ожидаемому значению"):
-            assert response.json()['message'] == 'Недостаточно данных для входа'
+            assert response.json()['message'] == CourierErrors.error_login_no_data, "Ошибка: Неверное сообщение об ошибке"
 
     @allure.title('Тест на ошибки при авторизации без передачи поля пароль')
     @allure.description(
@@ -51,7 +52,7 @@ class TestCourierLogin:
         with allure.step("Шаг 2: Проверка кода ответа"):
             assert response.status_code == 400
         with allure.step("Шаг 3: Проверка сообщения текст ответа соответствует ожидаемому значению"):
-            assert response.json()['message'] == 'Недостаточно данных для входа'
+            assert response.json()['message'] == CourierErrors.error_login_no_data, "Ошибка: Неверное сообщение об ошибке"
 
 
 
@@ -75,7 +76,7 @@ class TestCourierLogin:
         with allure.step("Шаг 2: Проверка кода ответа"):
             assert response.status_code == 400
         with allure.step("Шаг 3: Проверка текста ответа соответствует ожидаемому значению"):
-            assert response.json()['message'] == 'Недостаточно данных для входа'
+            assert response.json()['message'] == CourierErrors.error_login_no_data, "Ошибка: Неверное сообщение об ошибке"
 
     @allure.title('Тест на ошибки при авторизации с несуществующей парой логин и пароль')
     @allure.description(
@@ -85,12 +86,12 @@ class TestCourierLogin:
     @pytest.mark.parametrize('invalid_field', ['login', 'password'])
     def test_invalid_field_courier(self, registered_courier, invalid_field):
         payload = registered_courier.copy()
-        payload[invalid_field] = generate_random_string(10)
+        payload[invalid_field] += 'invalid'
         request_url = f'{url.BASE_URL}{ep.LOGIN_COURIER}'
         with allure.step("Шаг 1: Отправка POST-запроса на логин курьера в системе"):
             response = requests.post(request_url, data=payload)
         with allure.step("Шаг 2: Проверка кода ответа"):
             assert response.status_code == 404
         with allure.step("Шаг 3: Проверка текста ответа соответствует ожидаемому значению"):
-            assert response.json()['message'] == 'Учетная запись не найдена'
+            assert response.json()['message'] == CourierErrors.error_login_no_such_user, "Ошибка: Неверное сообщение об ошибке"
 

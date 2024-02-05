@@ -11,7 +11,12 @@ class Endpoints:
     CREATE_ORDER    = '/api/v1/orders'                  # POST Создание заказа
     GET_ORDER_LIST  = '/api/v1/orders'                  # GET Получение списка заказов
 
+class CourierErrors:
+    error_login_no_data = "Недостаточно данных для входа"
+    error_login_no_such_user = "Учетная запись не найдена"
 
+    error_create_no_data = "Недостаточно данных для создания учетной записи"
+    error_create_already_exist = "Этот логин уже используется. Попробуйте другой."
 
 class OrderData:
     name_list = ["Таня", "Аня", "Ивана", "Всеволод", "Пётр", "Илья", "Евсений"]

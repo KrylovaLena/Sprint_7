@@ -1,6 +1,3 @@
-<<<<<<< HEAD
-# Sprint_7
-=======
 Тестирование API для веб-сайта: https://qa-scooter.praktikum-services.ru/
 
 Документация: https://qa-scooter.praktikum-services.ru/docs/
@@ -41,4 +38,3 @@ test_create_order - параметризованный тест, который 
 4. test_list_of_orders.py - тесты по проверке списка заказов
 
 test_list_order -на возврат списка заказов в тело ответа и код ответа.
->>>>>>> 3d10d10 (The first delivery of the project)

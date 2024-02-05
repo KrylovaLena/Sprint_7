@@ -1,10 +1,9 @@
 import pytest
 import requests
 import allure
-import random
-import string
 from data import Urls as url
 from data import Endpoints as ep
+from data import CourierErrors
 
 
 class TestCreatingCourier:
@@ -31,7 +30,7 @@ class TestCreatingCourier:
         with allure.step("Шаг 2: Проверка кода ответа"):
             assert response.status_code == 400, "Ошибка: Неверный код ответа"
         with allure.step("Шаг 3: Проверка сообщения об ошибке при создании учетной записи"):
-            assert response.json()['message'] == "Недостаточно данных для создания учетной записи", "Ошибка: Неверное сообщение об ошибке"
+            assert response.json()['message'] == CourierErrors.error_create_no_data, "Ошибка: Неверное сообщение об ошибке"
 
 
 
@@ -46,7 +45,7 @@ class TestCreatingCourier:
         with allure.step("Шаг 2: Проверка кода ответа"):
             assert response.status_code == 400, "Ошибка: Неверный код ответа"
         with allure.step("Шаг 3: Проверка сообщения об ошибке при создании учетной записи"):
-            assert response.json()['message'] == "Недостаточно данных для создания учетной записи", "Ошибка: Неверное сообщение об ошибке"
+            assert response.json()['message'] == CourierErrors.error_create_no_data, "Ошибка: Неверное сообщение об ошибке"
 
 
     @allure.description('Проверяем обработку неуникального логина при создании курьера')
@@ -60,4 +59,4 @@ class TestCreatingCourier:
         with allure.step("Шаг 3: Проверка кода ответа"):
             assert duplicate_response.status_code == 409, "Ошибка: Неверный код ответа"
         with allure.step("Шаг 4: Проверка сообщения об ошибке"):
-            assert duplicate_response.json()["message"] == "Этот логин уже используется. Попробуйте другой.", "Ошибка: Неверное сообщение об ошибке"
+            assert duplicate_response.json()["message"] == CourierErrors.error_create_already_exist, "Ошибка: Неверное сообщение об ошибке"
